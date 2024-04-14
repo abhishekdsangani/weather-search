@@ -22,7 +22,7 @@ The application handles 429 (Too Many Requests) errors gracefully. If the API ra
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your_username/weather-search.git
+    git clone https://github.com/abhishekdsangani/weather-search.git
     ```
 
 2. Navigate to the project directory:
