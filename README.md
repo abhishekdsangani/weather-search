@@ -9,6 +9,14 @@ This is a simple Spring Boot application that integrates with the Weather Search
 - Java 11
 - Maven
 
+### Used Libraries
+
+This application utilizes Java's built-in HttpClient for making HTTP requests, eliminating the need for additional dependencies.
+
+### Error Handling
+
+The application handles 429 (Too Many Requests) errors gracefully. If the API rate limit is reached, the SDK automatically retries the request up to 10 times with a timeout of 15 seconds between attempts.
+
 ### Installation
 
 1. Clone the repository:

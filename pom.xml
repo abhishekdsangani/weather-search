@@ -12,7 +12,7 @@
     <groupId>com.abhishek.weather</groupId>
     <artifactId>weather-search</artifactId>
     <version>1.0.0</version>
-    <name>Weather Search API Integration</name>
+    <name>weather-search</name>
     <description>A simple application to integrate Weather Search API Using RapidAPI</description>
 
     <packaging>jar</packaging>
