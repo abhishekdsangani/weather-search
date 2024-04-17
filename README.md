@@ -43,39 +43,61 @@ The application handles 429 (Too Many Requests) errors gracefully. If the API ra
     java -jar target/weather-search-1.0.0.jar
     ```
 
+### Authentication
+
+Authentication is performed using header-based mechanisms:
+- **RapidAPI Key**: Include your RapidAPI Key (`X-RapidAPI-Key`) in the request headers.
+- **Basic Authentication**: For accessing weather forecast endpoints, provide Basic Authentication with your client credentials (clientId and clientSecret) encoded in base64 format in the `Authorization` header.
+
 ### Usage
 
 Once the application is running, you can access the following endpoints:
 
-#### API 1: Get Weather Forecast Summary
+#### API 1: Generate Access Token
+
+- **Endpoint:** `/generateToken`
+- **Method:** POST
+- **Body:** 
+```bash
+  {
+    "clientId": "your_client_id",
+    "clientSecret": "your_client_secret"
+  }
+```
+- **Description:** Generates an access token for API authentication.
+
+Example:
+```bash
+curl -X POST http://localhost:8080/generateToken -H "Content-Type: application/json" -d '{"clientId": "your_client_id", "clientSecret": "your_client_secret"}'
+```
+
+#### API 2: Get Weather Forecast Summary
 
 - **Endpoint:** `/weather/summary/{cityName}`
 - **Method:** GET
 - **Headers:**
     - `X-RapidAPI-Key`: Your RapidAPI Key
+    - `Authorization`: Basic {base64_encoded(clientId:clientSecret)}
 - **Description:** Retrieves the weather forecast summary for the specified city.
 
 Example:
 ```bash
-curl -X GET http://localhost:8080/weather/summary/London -H "X-RapidAPI-Key: YOUR_RAPIDAPI_KEY"
+curl -X GET http://localhost:8080/weather/summary/London -H "X-RapidAPI-Key: YOUR_RAPIDAPI_KEY" -H "Authorization: Basic base64_encoded(clientId:clientSecret)"
 ```
 
-#### API 2: Get Hourly Weather Forecast
+#### API 3: Get Hourly Weather Forecast
 
 - **Endpoint:** `/weather/hourly/{cityName}`
 - **Method:** GET
 - **Headers:**
     - `X-RapidAPI-Key`: Your RapidAPI Key
+    - `Authorization`: Basic {base64_encoded(clientId:clientSecret)}
 - **Description:** Retrieves the hourly weather forecast for the specified city.
 
 Example:
 ```bash
-curl -X GET http://localhost:8080/weather/hourly/NewYork -H "X-RapidAPI-Key: YOUR_RAPIDAPI_KEY"
+curl -X GET http://localhost:8080/weather/hourly/NewYork -H "X-RapidAPI-Key: YOUR_RAPIDAPI_KEY" -H "Authorization: Basic base64_encoded(clientId:clientSecret)"
 ```
-
-### Authentication
-
-This application uses header-based authentication with a RapidAPI Key (`X-RapidAPI-Key`). You need to obtain a RapidAPI Key from RapidAPI ([https://rapidapi.com/](https://rapidapi.com/)) and include it in the request headers for authentication.
 
 ### Built With
 
