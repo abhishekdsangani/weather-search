@@ -3,6 +3,7 @@ package com.abhishek.weather.controller;
 import com.abhishek.weather.api.model.LocationWrapper;
 import com.abhishek.weather.service.WeatherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,27 +22,43 @@ public class WeatherSearchController {
 
     private final WeatherService weatherService;
 
+    @Value("${rapid.api.token}")
+    private String rapidAPIHeader;
+
+    @Value("${weather.search.clientId}")
+    private String clientId;
+
+    @Value("${weather.search.clientSecret}")
+    private String clientSecret;
+
     @GetMapping("/weather/{forecastType}/{cityName}")
     public LocationWrapper getWeatherForecast(@PathVariable String forecastType,
                                               @PathVariable String cityName,
-                                              @RequestHeader(AUTH_HEADER_RAPID_API_KEY) String rapidAPIHeader,
+                                              //@RequestHeader(AUTH_HEADER_RAPID_API_KEY) String rapidAPIHeader,
                                               @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
 
+        LocationWrapper response = new LocationWrapper();
         if (accessToken == null || !accessToken.startsWith(AUTH_TYPE_BASIC)) {
-            throw new UnauthorizedException("Unauthorized access");
+            response.setMessage("Unauthorized access");
+            return response;
         }
 
         String decodedToken = new String(Base64.getDecoder().decode(accessToken.substring(6)));
         String[] credentialsArray = decodedToken.split(":");
         if (credentialsArray.length != 2) {
-            throw new InvalidCredentialsException("Invalid credentials");
+            response.setMessage("Invalid credentials");
+            return response;
+        }
+
+        if (!credentialsArray[0].equals(clientId) || !credentialsArray[1].equals(clientSecret)) {
+            response.setMessage("Invalid credentials");
+            return response;
         }
 
         if (forecastType.equalsIgnoreCase("summary") || forecastType.equalsIgnoreCase("hourly")) {
             return weatherService.getForecast(cityName, forecastType, rapidAPIHeader);
 
         } else {
-            LocationWrapper response = new LocationWrapper();
             response.setMessage("Invalid forecast type. Please provide either 'summary' or 'hourly'.");
             return response;
         }
